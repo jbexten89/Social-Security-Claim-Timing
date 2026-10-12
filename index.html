@@ -312,7 +312,6 @@ document.fonts&&document.fonts.ready.then(draw);
 </script>
 <script>
 ["gesturestart","gesturechange","gestureend"].forEach(t=>document.addEventListener(t,e=>e.preventDefault(),{passive:false}));
-let lastTouch=0;document.addEventListener("touchend",e=>{const n=Date.now();if(n-lastTouch<300)e.preventDefault();lastTouch=n},{passive:false});
 </script>
 </body>
 </html>
