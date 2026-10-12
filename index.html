@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Social Security Claim Timing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;800&display=swap">
+<style>
+/* Layout: single column on phones; on wide screens inputs sit left, results right. Dark slate cards on near-black. */
+:root{
+  --bg:#0b0f14;--surface:#18202a;--ink:#f3f5f7;--muted:#a3adb8;--line:#2a3542;--soft:#222c38;
+  --accent:#3ec79a;--accent-ink:#0b0f14;--gold:#e3a24f;
+  --s62:#5ea2e4;--s65:#e3a24f;--s67:#3ec79a;--s70:#a58ff2;--sc:#f07aa8;
+  --display:"Avenir Next","Nunito Sans",system-ui,sans-serif;--body:"Avenir Next","Nunito Sans",system-ui,sans-serif;--mono:"Avenir Next","Nunito Sans",system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 var(--body);padding-inline:16px;padding-block:20px 48px}
+.wrap{max-width:1120px;margin:0 auto;display:grid;gap:20px}
+header{display:grid;gap:4px}
+.eyebrow{font:600 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+h1{font:800 clamp(26px,5vw,38px)/1.1 var(--display);margin:0;text-wrap:balance;letter-spacing:-.01em}
+.lede{color:var(--muted);margin:0;max-width:62ch}
+.grid{display:grid;gap:20px}
+@media (min-width:900px){.grid{grid-template-columns:330px minmax(0,1fr);align-items:start}.side{position:sticky;top:calc(16px + env(safe-area-inset-top,0px))}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:14px;min-width:0}
+h2{font:700 18px var(--display);margin:0}
+h3{font:600 12px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:0}
+.note{font-size:13px;color:var(--muted);margin:0}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{display:grid;gap:4px;font-size:13px;color:var(--muted);min-width:0}
+label b{color:var(--ink);font-weight:600;display:flex;align-items:center;gap:6px}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
+input[type=number],input[type=month],select{font:500 16px var(--mono);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%;min-width:0;min-height:42px}
+input[type=month]{-webkit-appearance:none;appearance:none;display:block;max-width:100%;text-align:left}
+input[type=month]::-webkit-date-and-time-value{text-align:left}
+input:focus-visible,button:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.money{position:relative}.money span{position:absolute;left:10px;top:50%;transform:translateY(-50%);font:500 16px var(--mono);color:var(--muted)}.money input{padding-left:22px}
+button{font:600 14px var(--body);background:transparent;color:var(--accent);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
+button:hover{background:var(--soft)}
+.toggle{display:flex;align-items:center;gap:10px;font-weight:600;color:var(--ink);font-size:15px}
+.toggle input{width:20px;height:20px;accent-color:var(--sc)}
+.strip{display:flex;height:46px;border-radius:8px;overflow:hidden;gap:2px}
+.seg{display:flex;align-items:center;justify-content:center;color:var(--bg);font:700 13px var(--body);min-width:0;overflow:hidden;white-space:nowrap}
+.scale{display:flex;justify-content:space-between;font:12px var(--mono);color:var(--muted)}
+.bands{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.bands li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:baseline;font-size:15px}
+.bands .when{grid-column:1/-1;font:600 13px var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.odds{font:700 14px var(--mono);color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.callout{background:var(--gold);color:var(--bg);border-radius:10px;padding:12px 14px;font-weight:600}
+.live-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 16px}
+.big{font:800 28px var(--display);font-variant-numeric:tabular-nums}
+.big small{font:500 14px var(--mono);color:var(--muted);margin-left:8px}
+input[type=range]{width:100%;accent-color:var(--accent)}
+#custAge{accent-color:var(--sc)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.steps button{min-height:44px;font-size:15px;font-variant-numeric:tabular-nums}
+.rows{display:grid;gap:10px}
+.row{display:grid;grid-template-columns:96px minmax(0,1fr) auto;gap:10px;align-items:center}
+.row .lbl{font-weight:600;display:flex;align-items:center;gap:6px;font-size:15px;white-space:nowrap}
+.bar{height:14px;background:var(--soft);border-radius:4px;overflow:hidden}.bar i{display:block;height:100%;border-radius:0 4px 4px 0}
+.val{font:500 14px var(--mono);font-variant-numeric:tabular-nums;text-align:right;min-width:150px}
+.val em{font-style:normal;color:var(--muted);display:block;font-size:12px}
+.chip{font:700 11px var(--mono);letter-spacing:.05em;text-transform:uppercase;background:var(--accent);color:var(--accent-ink);padding:2px 6px;border-radius:4px}
+.chart{position:relative;width:100%;height:340px;touch-action:none}
+.chart canvas{width:100%;height:100%;display:block;cursor:crosshair}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:6px}
+.tablebox{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:420px}
+th{font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+td{padding:9px 8px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+td.m{font-family:var(--mono)}
+.pair{display:flex;align-items:center;gap:6px;font-weight:600;white-space:nowrap}
+.bridge{display:grid;gap:10px}
+.brow{display:grid;grid-template-columns:96px minmax(0,1fr);gap:4px 10px;align-items:baseline;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.brow:last-child{border-bottom:0;padding-bottom:0}
+.brow .amt{font:700 17px var(--mono);font-variant-numeric:tabular-nums}
+.brow .sub{grid-column:2;font-size:13px;color:var(--muted)}
+.warn{color:var(--gold)}
+@media (max-width:480px){.row{grid-template-columns:86px minmax(0,1fr)}.val{grid-column:1/-1;text-align:left;min-width:0;display:flex;gap:8px;align-items:baseline}.val em{display:inline}.brow{grid-template-columns:86px minmax(0,1fr)}}
+@media (prefers-reduced-motion:no-preference){.bar i{transition:width .2s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Breakeven planner · SSA estimate</div>
+    <h1>When should you start Social Security?</h1>
+    <p class="lede">Waiting means bigger checks but fewer of them. This shows how long you'd need to live for each wait to pay off, how likely that is, and what waiting costs your savings.</p>
+  </header>
+
+  <div class="grid">
+    <aside class="side panel">
+      <div style="display:grid;gap:4px"><h2>Your monthly benefit</h2><p class="note">From your SSA Retirement Calculator. Full retirement age is 67.</p></div>
+      <div class="fields" id="benefits"></div>
+      <label><b>Birth month</b><input type="month" id="birth"></label>
+
+      <h3 style="margin-top:6px">Try another claim age</h3>
+      <label class="toggle"><input type="checkbox" id="custOn"> Compare a custom month</label>
+      <div id="custBox" style="display:grid;gap:10px">
+        <div class="live-head"><span class="note">Estimated between your SSA amounts</span><div class="big" style="font-size:22px" id="custTxt"></div></div>
+        <input type="range" id="custAge" min="0" max="96" step="1" aria-label="Custom claim age">
+        <div class="steps" style="grid-template-columns:repeat(2,1fr)">
+          <button type="button" data-c="-1">−1 mo</button>
+          <button type="button" data-c="1">+1 mo</button>
+        </div>
+      </div>
+
+      <h3 style="margin-top:6px">Assumptions</h3>
+      <label><b>Your health</b>
+        <select id="health"><option value="1.6">Below average</option><option value="1">Average</option><option value="0.65">Above average</option></select>
+      </label>
+      <label><b>Yearly cost-of-living raise (%)</b><input type="number" id="cola" step="0.1" min="0" max="10"></label>
+      <p class="note">Raises every option by the same percent, so breakevens barely move.</p>
+      <label><b>Return on invested checks (%)</b><input type="number" id="ret" step="0.1" min="0" max="12"></label>
+      <p class="note">A higher return makes waiting pay off later. Above 0%, totals are in today's dollars at age 62.</p>
+      <button id="reset" type="button">Reset to SSA estimate</button>
+    </aside>
+
+    <main style="display:grid;gap:20px;min-width:0">
+      <section class="panel">
+        <h2>Best choice by how long you live</h2>
+        <div class="strip" id="strip"></div>
+        <div class="scale"><span>62</span><span>70</span><span>80</span><span>90</span><span>100</span></div>
+        <ul class="bands" id="bands"></ul>
+        <div class="callout" id="ev"></div>
+        <p class="note" id="evNote"></p>
+      </section>
+
+      <section class="panel">
+        <div class="live-head"><h2>If you live to</h2><div class="big" id="liveAge"></div></div>
+        <p class="note" id="liveOdds"></p>
+        <div class="rows" id="rows"></div>
+        <input type="range" id="live" min="0" max="456" step="12" aria-label="Age you live to, in years" style="margin-top:8px">
+        <div class="scale"><span>62</span><span>70</span><span>80</span><span>90</span><span>100</span></div>
+        <div class="steps">
+          <button type="button" data-d="-12">−1 yr</button>
+          <button type="button" data-d="-1">−1 mo</button>
+          <button type="button" data-d="1">+1 mo</button>
+          <button type="button" data-d="12">+1 yr</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Total collected over time</h2>
+        <div class="legend" id="legend"></div>
+        <div class="chart"><canvas id="cv" role="img" aria-label="Cumulative benefits by claiming age from 62 to 100, with breakeven points and survival odds"></canvas></div>
+        <p class="note">Tap or drag on the chart to set the age you live to. White dots are breakevens. The shaded band at the bottom is your chance of still being alive.</p>
+      </section>
+
+      <section class="panel">
+        <h2>Cost of waiting after you stop working</h2>
+        <div class="fields">
+          <label><b>Stop working at</b><select id="retY"></select></label>
+          <label><b>&nbsp;</b><select id="retM"></select></label>
+        </div>
+        <label><b>Savings when you stop working</b><span class="money"><span>$</span><input type="number" id="sav" inputmode="numeric" min="0" step="1000"></span></label>
+        <p class="note" id="bridgeBase"></p>
+        <div class="bridge" id="bridge"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Breakeven ages</h2>
+        <p class="note">The age where waiting longer catches up in total dollars. Live past it and the later claim wins.</p>
+        <div class="tablebox"><table><thead><tr><th>Earlier vs later</th><th>Breakeven age</th><th>Around</th><th>Each has collected</th><th>Chance you get there</th></tr></thead><tbody id="tbody"></tbody></table></div>
+        <p class="note">SSA's amounts assume you keep earning about $151,058 a year until you claim. Custom-month amounts are estimated between those points. Life odds are a rough model of US male mortality, not a personal forecast. Spousal and survivor benefits and taxes are not included.</p>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+const K=[62,65,67,70],N=(100-62)*12;
+const DEF={b:{62:2743,65:3398,67:3931,70:4888},birth:"1971-03",cola:0,ret:0,live:(85-62)*12,custOn:true,cust:48,health:"1",retire:36,sav:1927154};
+let S=JSON.parse(JSON.stringify(DEF));
+try{const s=JSON.parse(localStorage.getItem("ssclaim")||"null");if(s&&s.b)S=Object.assign(S,s)}catch(e){}
+const save=()=>{try{localStorage.setItem("ssclaim",JSON.stringify(S))}catch(e){}};
+const $=id=>document.getElementById(id);
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const usd=v=>"$"+Math.round(v).toLocaleString("en-US");
+const usdK=v=>v>=1e6?"$"+(v/1e6).toFixed(2)+"M":"$"+Math.round(v/1000)+"k";
+const pct=p=>p<.01?"under 1%":Math.round(p*100)+"%";
+const ageTxt=n=>{n=Math.round(n);const y=62+Math.floor(n/12),m=n%12;return m?y+" y "+m+" m":y+" y"};
+const gapTxt=n=>{n=Math.round(n);const y=Math.floor(n/12),m=n%12;return (y?y+" y":"")+(y&&m?" ":"")+(m?m+" m":"")||"0 m"};
+const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const bm=()=>{const [y,m]=(S.birth||"1971-03").split("-").map(Number);return y*12+(m-1)};
+const dateTxt=n=>{const t=bm()+62*12+Math.round(n);return MON[t%12]+" "+Math.floor(t/12)};
+
+function interp(n){const P=[[0,+S.b[62]],[36,+S.b[65]],[60,+S.b[67]],[96,+S.b[70]]];n=Math.max(0,Math.min(96,n));
+  for(let i=1;i<P.length;i++)if(n<=P[i][0]){const[a,ya]=P[i-1],[b,yb]=P[i];return ya+(yb-ya)*(n-a)/(b-a)}return P[3][1]}
+
+const GA=4.26e-5,GB=0.09;
+function nowAge(){const d=new Date();return ((d.getFullYear()*12+d.getMonth())-bm())/12}
+function surv(x){const x0=nowAge(),h=+S.health;if(x<=x0)return 1;return Math.exp(-h*(GA/GB)*(Math.exp(GB*x)-Math.exp(GB*x0)))}
+
+let O=[],C={},BE=[],BANDS=[],EV={};
+function opts(){O=K.map(a=>({k:String(a),lab:"At "+a,st:(a-62)*12,m:+S.b[a]||0,c:"--s"+a}));
+  if(S.custOn&&!K.some(a=>(a-62)*12===S.cust))O.push({k:"c",lab:"At "+ageTxt(S.cust),st:S.cust,m:interp(S.cust),c:"--sc"});
+  O.sort((a,b)=>a.st-b.st)}
+function compute(){
+  opts();const f=Math.pow((1+S.cola/100)/(1+S.ret/100),1/12);C={};EV={};
+  for(const o of O){const arr=new Float64Array(N+1);let w=1,ev=0;
+    for(let n=1;n<=N;n++){const k=n-1,p=k>=o.st?o.m*w:0;arr[n]=arr[n-1]+p;ev+=p*surv(62+k/12);w*=f}C[o.k]=arr;EV[o.k]=ev}
+  BE=[];
+  for(let i=0;i<O.length;i++)for(let j=i+1;j<O.length;j++){const a=O[i],b=O[j];if(a.st===b.st)continue;const A=C[a.k],B=C[b.k];let hit=null;
+    for(let n=b.st+1;n<=N;n++){if(B[n]>=A[n]){const d0=A[n-1]-B[n-1],d1=A[n]-B[n];const fr=d0===d1?0:d0/(d0-d1);const x=n-1+Math.max(0,Math.min(1,fr));hit={x,y:A[n-1]+(A[n]-A[n-1])*(x-(n-1))};break}}
+    BE.push({a,b,hit})}
+  BANDS=[];
+  for(let n=1;n<=N;n++){let best=O[0];for(const o of O)if(C[o.k][n]>C[best.k][n]+1e-6)best=o;
+    const L=BANDS[BANDS.length-1];if(L&&L.o.k===best.k)L.to=n;else BANDS.push({o:best,from:n-1,to:n})}
+}
+const dotOf=o=>`<span class="dot" style="background:var(${o.c})"></span>`;
+
+function renderInputs(){
+  $("benefits").innerHTML=K.map(a=>`<label><b><span class="dot" style="background:var(--s${a})"></span>At ${a}</b><span class="money"><span>$</span><input type="number" id="b${a}" inputmode="numeric" min="0" step="1" value="${S.b[a]}"></span></label>`).join("");
+  K.forEach(a=>$("b"+a).addEventListener("input",e=>{S.b[a]=Math.max(0,+e.target.value||0);update()}));
+  $("birth").value=S.birth;$("cola").value=S.cola;$("ret").value=S.ret;$("live").value=S.live;
+  $("custOn").checked=S.custOn;$("custAge").value=S.cust;$("health").value=S.health;$("sav").value=S.sav;
+  $("retY").innerHTML=Array.from({length:16},(_,i)=>`<option value="${55+i}">Age ${55+i}</option>`).join("");
+  $("retM").innerHTML=Array.from({length:12},(_,i)=>`<option value="${i}">${i} months</option>`).join("");
+  const r=S.retire+62*12;$("retY").value=Math.floor(r/12);$("retM").value=r%12;
+}
+$("birth").addEventListener("input",e=>{if(e.target.value){S.birth=e.target.value;update()}});
+$("cola").addEventListener("input",e=>{S.cola=Math.max(0,+e.target.value||0);update()});
+$("ret").addEventListener("input",e=>{S.ret=Math.max(0,+e.target.value||0);update()});
+$("health").addEventListener("change",e=>{S.health=e.target.value;update()});
+$("custOn").addEventListener("change",e=>{S.custOn=e.target.checked;update()});
+$("custAge").addEventListener("input",e=>{S.cust=+e.target.value;update()});
+document.querySelectorAll("[data-c]").forEach(b=>b.addEventListener("click",()=>{S.cust=Math.max(0,Math.min(96,S.cust+ +b.dataset.c));$("custAge").value=S.cust;S.custOn=true;$("custOn").checked=true;update()}));
+const setRet=()=>{S.retire=(+$("retY").value*12+ +$("retM").value)-62*12;renderBridge();save()};
+$("retY").addEventListener("change",setRet);$("retM").addEventListener("change",setRet);
+$("sav").addEventListener("input",e=>{S.sav=Math.max(0,+e.target.value||0);renderBridge();save()});
+$("live").addEventListener("input",e=>{S.live=+e.target.value;renderLive();draw();save()});
+document.querySelectorAll("[data-d]").forEach(b=>b.addEventListener("click",()=>{S.live=Math.max(0,Math.min(N,S.live+ +b.dataset.d));$("live").value=S.live;renderLive();draw();save()}));
+$("reset").addEventListener("click",()=>{const keep={live:S.live,retire:S.retire,sav:S.sav,cust:S.cust,custOn:S.custOn,health:S.health};S=Object.assign(JSON.parse(JSON.stringify(DEF)),keep);renderInputs();update()});
+
+function renderStrip(){
+  $("strip").innerHTML=BANDS.map(b=>{const w=(b.to-b.from)/N*100;const t=b.o.k==="c"?ageTxt(b.o.st):b.o.k;return `<div class="seg" style="flex:0 0 calc(${w}% - 2px);background:var(${b.o.c})" title="Claim ${b.o.lab}">${w>9?"Claim at "+t:w>3?t:""}</div>`}).join("");
+  const s0=surv(62);let html="";
+  if(1-s0>=0.01)html+=`<li><span class="when">Before 62</span><span>No benefits under any option</span><span class="odds">${pct(1-s0)}</span></li>`;
+  html+=BANDS.map((b,i)=>{const last=i===BANDS.length-1;
+    const when=i===0?`Die before ${ageTxt(b.to)}`:last?`Live past ${ageTxt(b.from)}`:`Die between ${ageTxt(b.from)} and ${ageTxt(b.to)}`;
+    const p=surv(62+b.from/12)-(last?0:surv(62+b.to/12));
+    return `<li><span class="when">${when}</span><span>${dotOf(b.o)} claiming ${b.o.lab.toLowerCase()} pays the most</span><span class="odds">${pct(p)} chance</span></li>`}).join("");
+  $("bands").innerHTML=html;
+  const best=O.reduce((a,b)=>EV[b.k]>EV[a.k]?b:a),sorted=O.map(o=>EV[o.k]).sort((a,b)=>b-a);
+  $("ev").textContent=`Weighted by those odds, claiming ${best.lab.toLowerCase()} gives the highest expected lifetime total: ${usd(EV[best.k])}, about ${usdK(sorted[0]-sorted[1])} more than the next best.`;
+  $("evNote").textContent="Expected totals: "+O.map(o=>`${o.k==="c"?ageTxt(o.st):o.k} ${usdK(EV[o.k])}`).join(" · ");
+}
+function renderLive(){
+  const n=S.live;$("liveAge").innerHTML=`${ageTxt(n)}<small>${dateTxt(n)}</small>`;
+  $("liveOdds").textContent=`About a ${pct(surv(62+n/12))} chance you reach this age.`;
+  const vals=O.map(o=>C[o.k][n]),mx=Math.max(...vals,1),bi=vals.indexOf(Math.max(...vals));
+  $("rows").innerHTML=O.map((o,i)=>{const v=vals[i],gap=vals[bi]-v;
+    return `<div class="row"><span class="lbl">${dotOf(o)}${o.lab}</span><div class="bar"><i style="width:${v/mx*100}%;background:var(${o.c})"></i></div><div class="val">${usd(v)} ${i===bi&&v>0?'<span class="chip">Most</span>':`<em>${v===0?"not started yet":"−"+usdK(gap)+" vs best"}</em>`}</div></div>`}).join("");
+}
+function renderTable(){
+  $("tbody").innerHTML=BE.map(r=>`<tr><td><span class="pair">${dotOf(r.a)}${r.a.k==="c"?ageTxt(r.a.st):r.a.k} vs ${dotOf(r.b)}${r.b.k==="c"?ageTxt(r.b.st):r.b.k}</span></td>${r.hit?`<td class="m">${ageTxt(r.hit.x)}</td><td>${dateTxt(r.hit.x)}</td><td class="m">${usdK(r.hit.y)}</td><td class="m">${pct(surv(62+r.hit.x/12))}</td>`:`<td colspan="4">No breakeven before 100</td>`}</tr>`).join("");
+  $("legend").innerHTML=O.map(o=>`<span>${dotOf(o)}Claim ${o.lab.toLowerCase()} · ${usd(o.m)}/mo</span>`).join("");
+  $("custTxt").textContent=`${ageTxt(S.cust)} · ${usd(interp(S.cust))}/mo`;
+  $("custBox").style.opacity=S.custOn?1:.45;
+}
+function renderBridge(){
+  const base=Math.max(0,S.retire),bm0=interp(base);
+  $("bridgeBase").textContent=`Compared with claiming the month you stop working${S.retire<0?" (or at 62 if that's earlier)":""}: ${ageTxt(base)}, about ${usd(bm0)}/mo. Waiting means your savings cover that income until checks start.`;
+  $("bridge").innerHTML=O.map(o=>{const gap=o.st-base;
+    if(gap<=0)return `<div class="brow"><span class="lbl" style="font-weight:600;display:flex;gap:6px;align-items:center">${dotOf(o)}${o.lab}</span><span class="amt">$0</span>${gap<0?`<span class="sub warn">Starts ${gapTxt(-gap)} before you stop working.${o.st<60?" Before 67, SSA withholds $1 for every $2 earned over the yearly limit, so most of these checks may be held back.":""}</span>`:`<span class="sub">No gap. Checks start when the paychecks stop.</span>`}</div>`;
+    const cost=bm0*gap,yr=bm0*12,rate=S.sav>0?yr/S.sav*100:0;
+    return `<div class="brow"><span class="lbl" style="font-weight:600;display:flex;gap:6px;align-items:center">${dotOf(o)}${o.lab}</span><span class="amt">${usd(cost)} from savings</span><span class="sub">${gapTxt(gap)} gap at ${usd(yr)}/yr${S.sav>0?` · adds ${rate.toFixed(1)}% to your withdrawal rate during the gap`:""} · then ${usd(o.m-bm0)}/mo more for life</span></div>`}).join("");
+}
+
+const cv=$("cv"),ctx=cv.getContext("2d");let G=null;
+function draw(){
+  const r=cv.getBoundingClientRect(),dpr=window.devicePixelRatio||1;cv.width=r.width*dpr;cv.height=r.height*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
+  const ink=cssv("--ink"),mut=cssv("--muted"),line=cssv("--line"),surf=cssv("--surface");
+  const W=r.width,H=r.height,L=48,R=10,T=10,B=28,pw=W-L-R,ph=H-T-B;
+  let ymax=0;O.forEach(o=>ymax=Math.max(ymax,C[o.k][N]));
+  const step=[1e5,2e5,25e4,5e5,1e6].find(s=>ymax/s<=6)||1e6;ymax=Math.ceil(ymax/step)*step||step;
+  const X=n=>L+n/N*pw,Y=v=>T+ph-v/ymax*ph;G={L,pw};
+  ctx.clearRect(0,0,W,H);ctx.font="12px 'Avenir Next','Nunito Sans',sans-serif";ctx.lineWidth=1;
+  ctx.fillStyle="rgba(62,199,154,0.13)";ctx.beginPath();ctx.moveTo(X(0),T+ph);
+  for(let n=0;n<=N;n+=3)ctx.lineTo(X(n),T+ph-surv(62+n/12)*ph*0.35);ctx.lineTo(X(N),T+ph);ctx.closePath();ctx.fill();
+  for(let v=0;v<=ymax+1;v+=step){ctx.strokeStyle=line;ctx.beginPath();ctx.moveTo(L,Y(v)+.5);ctx.lineTo(W-R,Y(v)+.5);ctx.stroke();ctx.fillStyle=mut;ctx.textAlign="right";ctx.textBaseline="middle";ctx.fillText(usdK(v),L-6,Y(v))}
+  ctx.textAlign="center";ctx.textBaseline="top";for(let a=62;a<=100;a+=(W<500?6:2))ctx.fillText(a,X((a-62)*12),H-B+8);
+  const lx=X(S.live);ctx.strokeStyle=mut;ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(lx,T);ctx.lineTo(lx,T+ph);ctx.stroke();ctx.setLineDash([]);
+  ctx.lineWidth=2.25;ctx.lineJoin="round";
+  for(const o of O){ctx.strokeStyle=cssv(o.c);if(o.k==="c")ctx.setLineDash([6,4]);ctx.beginPath();for(let n=0;n<=N;n+=2){const p=[X(n),Y(C[o.k][n])];n?ctx.lineTo(...p):ctx.moveTo(...p)}ctx.stroke();ctx.setLineDash([])}
+  for(const b of BE)if(b.hit){ctx.beginPath();ctx.arc(X(b.hit.x),Y(b.hit.y),4.5,0,7);ctx.fillStyle=ink;ctx.fill();ctx.lineWidth=2;ctx.strokeStyle=surf;ctx.stroke()}
+  for(const o of O){const v=C[o.k][S.live];if(v>0){ctx.beginPath();ctx.arc(lx,Y(v),4,0,7);ctx.fillStyle=cssv(o.c);ctx.fill()}}
+}
+function pick(e){if(!G)return;const r=cv.getBoundingClientRect();const n=Math.round((e.clientX-r.left-G.L)/G.pw*N);S.live=Math.max(0,Math.min(N,n));$("live").value=S.live;renderLive();draw();save()}
+let dragging=false;cv.addEventListener("pointerdown",e=>{dragging=true;cv.setPointerCapture(e.pointerId);pick(e)});
+cv.addEventListener("pointermove",e=>{if(dragging)pick(e)});cv.addEventListener("pointerup",()=>dragging=false);
+
+function update(){compute();renderStrip();renderLive();renderTable();renderBridge();draw();save()}
+new ResizeObserver(()=>draw()).observe(cv);
+renderInputs();update();
+document.fonts&&document.fonts.ready.then(draw);
+</script>
+</body>
+</html>
