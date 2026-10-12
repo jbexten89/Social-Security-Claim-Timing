@@ -25,7 +25,8 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box}
-html,body{touch-action:manipulation;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+*,*::before,*::after{touch-action:manipulation}
+html,body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 input,select,textarea{font-size:16px}
 body{background:var(--bg);color:var(--ink);font:16px/1.55 var(--body);padding-inline:16px;padding-block:20px 48px}
 .wrap{max-width:1120px;margin:0 auto;display:grid;gap:20px}
@@ -312,6 +313,7 @@ document.fonts&&document.fonts.ready.then(draw);
 </script>
 <script>
 ["gesturestart","gesturechange","gestureend"].forEach(t=>document.addEventListener(t,e=>e.preventDefault(),{passive:false}));
+let lastTap=0;document.addEventListener("touchend",e=>{if(e.target.closest("button,input,select,label,a,canvas"))return;const n=Date.now();if(n-lastTap<350)e.preventDefault();lastTap=n},{passive:false});
 </script>
 </body>
 </html>
