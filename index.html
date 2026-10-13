@@ -28,7 +28,8 @@
 *,*::before,*::after{touch-action:manipulation}
 html,body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 input,select,textarea{font-size:16px}
-body{background:var(--bg);color:var(--ink);font:16px/1.55 var(--body);padding-inline:16px;padding-block:20px 48px}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 var(--body);padding-inline:max(16px,env(safe-area-inset-left)) max(16px,env(safe-area-inset-right));padding-block:calc(20px + env(safe-area-inset-top)) calc(48px + env(safe-area-inset-bottom))}
+.statusbar{position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top);background:var(--bg);z-index:50}
 .wrap{max-width:1120px;margin:0 auto;display:grid;gap:20px}
 header{display:grid;gap:4px}
 .eyebrow{font:600 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
@@ -96,6 +97,7 @@ td.m{font-family:var(--mono)}
 </style>
 </head>
 <body>
+<div class="statusbar" aria-hidden="true"></div>
 <div class="wrap">
   <header>
     <div class="eyebrow">Breakeven planner · SSA estimate</div>
