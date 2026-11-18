@@ -31,10 +31,10 @@ input,select,textarea{font-size:16px}
 body{background:var(--bg);color:var(--ink);font:16px/1.55 var(--body);padding-inline:max(16px,env(safe-area-inset-left)) max(16px,env(safe-area-inset-right));padding-block:calc(20px + env(safe-area-inset-top)) calc(48px + env(safe-area-inset-bottom))}
 .statusbar{position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top);background:var(--bg);z-index:50}
 .wrap{max-width:1120px;margin:0 auto;display:grid;gap:20px}
-header{display:grid;gap:4px}
-.eyebrow{font:600 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
-h1{font:800 clamp(26px,5vw,38px)/1.1 var(--display);margin:0;text-wrap:balance;letter-spacing:-.01em}
-.lede{color:var(--muted);margin:0;max-width:62ch}
+header{display:grid;gap:6px;padding-inline:2px}
+.eyebrow{font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--accent);opacity:.85}
+h1{font:600 clamp(24px,4.6vw,34px)/1.2 var(--display);margin:0;text-wrap:balance;letter-spacing:-.005em}
+.lede{color:var(--muted);margin:0;max-width:52ch;font-size:15px;line-height:1.5}
 .grid{display:grid;gap:20px}
 @media (min-width:900px){.grid{grid-template-columns:330px minmax(0,1fr);align-items:start}.side{position:sticky;top:calc(16px + env(safe-area-inset-top,0px))}}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:14px;min-width:0}
@@ -100,9 +100,9 @@ td.m{font-family:var(--mono)}
 <div class="statusbar" aria-hidden="true"></div>
 <div class="wrap">
   <header>
-    <div class="eyebrow">Breakeven planner · SSA estimate</div>
-    <h1>When should you start Social Security?</h1>
-    <p class="lede">Waiting means bigger checks but fewer of them. This shows how long you'd need to live for each wait to pay off, how likely that is, and what waiting costs your savings.</p>
+    <div class="eyebrow">Social Security planner</div>
+    <h1>When should you claim?</h1>
+    <p class="lede">Waiting means bigger checks, but fewer of them. See when each choice pays off and what it costs.</p>
   </header>
 
   <div class="grid">
