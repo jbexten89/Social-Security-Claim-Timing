@@ -32,7 +32,8 @@ body{background:var(--bg);color:var(--ink);font:16px/1.55 var(--body);padding-in
 .statusbar{position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top);background:var(--bg);z-index:50}
 .wrap{max-width:1120px;margin:0 auto;display:grid;gap:20px}
 header{display:flex;align-items:center;gap:12px;padding-block:4px}
-.logo{width:40px;height:40px;flex:none}
+.logo{width:42px;height:42px;flex:none}
+@media (min-width:900px){.logo{width:38px;height:38px}}
 .titles{display:grid;gap:1px;min-width:0}
 h1{font:600 22px/1.2 var(--display);margin:0;letter-spacing:-.005em}
 .lede{color:var(--muted);margin:0;font-size:14px;line-height:1.35}
@@ -101,7 +102,7 @@ td.m{font-family:var(--mono)}
 <div class="statusbar" aria-hidden="true"></div>
 <div class="wrap">
   <header>
-    <svg class="logo" viewBox="0 0 140 140" aria-hidden="true"><g stroke-width="9" stroke-linecap="round" fill="none"><path d="M26 82 L114 58" stroke="#5ea2e4"/><path d="M40 98 L114 49" stroke="#e3a24f"/><path d="M51 112 L114 40" stroke="#3ec79a"/><path d="M65 121 L114 28" stroke="#a58ff2"/></g><circle cx="91" cy="64" r="10" fill="#f3f5f7" stroke="#0b0f14" stroke-width="4"/></svg>
+    <svg class="logo" viewBox="16 20 108 108" aria-hidden="true"><g stroke-width="9" stroke-linecap="round" fill="none"><path d="M26 82 L114 58" stroke="#5ea2e4"/><path d="M40 98 L114 49" stroke="#e3a24f"/><path d="M51 112 L114 40" stroke="#3ec79a"/><path d="M65 121 L114 28" stroke="#a58ff2"/></g><circle cx="91" cy="64" r="10" fill="#f3f5f7" stroke="#0b0f14" stroke-width="4"/></svg>
     <div class="titles">
       <h1>SS Claim Timing</h1>
       <p class="lede">When to start Social Security</p>
